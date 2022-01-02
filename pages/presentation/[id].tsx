@@ -1,30 +1,23 @@
 import { GetServerSidePropsContext } from "next";
 import { GetServerSidePropsResult } from "next/types";
 
+import Presentation from "../../src/components/Presentation/Presentation";
+
 import { getPresentation } from "../../src/api/database";
-import styles from "../../src/assets/styles/Presentation.module.scss";
+import { PresentationData } from "../../src/types/presentation";
 
-interface PresentationProps {
-  user: string | undefined;
-  repository: string | undefined;
+import styles from "../../src/assets/styles/PresentationPage.module.scss";
+
+function PresentationPage({ user, repository }: PresentationData) {
+  return <Presentation user={user} repository={repository} />;
 }
 
-function Presentation({ user, repository }: PresentationProps) {
-  return (
-    <div>
-      <h1>
-        {user} / {repository}
-      </h1>
-    </div>
-  );
-}
-
-export default Presentation;
+export default PresentationPage;
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext
-): Promise<GetServerSidePropsResult<PresentationProps>> {
-  let result: GetServerSidePropsResult<PresentationProps> = {
+): Promise<GetServerSidePropsResult<PresentationData>> {
+  let result: GetServerSidePropsResult<PresentationData> = {
     notFound: true,
   };
 
