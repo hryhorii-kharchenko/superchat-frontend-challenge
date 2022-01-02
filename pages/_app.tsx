@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Prettier GitHub Links</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </div>
   );
 }
