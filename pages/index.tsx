@@ -1,3 +1,4 @@
+import React from "react";
 import { useRouter } from "next/router";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -8,6 +9,7 @@ import * as yup from "yup";
 import { PresentationData } from "../src/types/presentation";
 import { PREVIEW_PAGE_ROUTE } from "../src/constants/pages";
 import styles from "../src/assets/styles/Home.module.scss";
+import { getGithubRepositoryData } from "../src/api/github";
 
 const validationSchema = yup.object({
   user: yup.string().required("User is required"),
@@ -41,13 +43,38 @@ function Home({
   }
 
   const formik = useFormik({
+    initialStatus: "",
     initialValues,
     validationSchema,
-    onSubmit: (values) => {
-      setPresentation({ ...values });
-      router.push(PREVIEW_PAGE_ROUTE).catch(console.log);
+    onSubmit: async function handleSubmit(values, { setStatus }) {
+      let isSuccessful = false;
+
+      try {
+        const repoData = await getGithubRepositoryData(
+          values.user,
+          values.repository
+        );
+
+        if (repoData && repoData.id) {
+          isSuccessful = true;
+
+          setPresentation({ ...values });
+          router.push(PREVIEW_PAGE_ROUTE).catch(console.log);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      if (!isSuccessful) {
+        setStatus("This author or repository cannot be found");
+      }
     },
   });
+
+  function handleChange(event: React.ChangeEvent<any>) {
+    formik.handleChange(event);
+    formik.setStatus("");
+  }
 
   return (
     <main className={styles.main}>
@@ -70,8 +97,11 @@ function Home({
           name="user"
           label="User"
           value={formik.values.user}
-          onChange={formik.handleChange}
-          error={formik.touched.user && Boolean(formik.errors.user)}
+          onChange={handleChange}
+          error={
+            (formik.touched.repository && Boolean(formik.errors.repository)) ||
+            Boolean(formik.status)
+          }
           helperText={formik.touched.user && formik.errors.user}
         />
         <TextField
@@ -81,9 +111,15 @@ function Home({
           label="Repository"
           type="repository"
           value={formik.values.repository}
-          onChange={formik.handleChange}
-          error={formik.touched.repository && Boolean(formik.errors.repository)}
-          helperText={formik.touched.repository && formik.errors.repository}
+          onChange={handleChange}
+          error={
+            (formik.touched.repository && Boolean(formik.errors.repository)) ||
+            Boolean(formik.status)
+          }
+          helperText={
+            (formik.touched.repository && formik.errors.repository) ||
+            formik.status
+          }
         />
 
         <Button color="primary" variant="contained" fullWidth type="submit">
