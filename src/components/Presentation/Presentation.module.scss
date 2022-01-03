@@ -1,0 +1,39 @@
+.container {
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.descriptionContainer {
+
+}
+
+.peopleContainer {
+  margin: 20px auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.contributorsContainer {
+  min-width: 400px;
+  width: calc(50% - 20px);
+  margin: 0 10px;
+}
+
+.stargazersContainer {
+  min-width: 400px;
+  width: calc(50% - 20px);
+  margin: 0 10px;
+}

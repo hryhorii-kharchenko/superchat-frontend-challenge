@@ -20,7 +20,7 @@ export function getGithubRepositoryTop5Contributors(
   repository: string
 ) {
   return fetch(
-    `${GITHUB_URL}${GITHUB_ENDPOINTS.REPOS}/${user}/${repository}${GITHUB_ENDPOINTS.CONTRIBUTORS}?q=contributions&order=desc&per_page=5`,
+    `${GITHUB_URL}${GITHUB_ENDPOINTS.REPOS}/${user}/${repository}${GITHUB_ENDPOINTS.CONTRIBUTORS}?sort=contributions&direction=desc&per_page=5`,
     {
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -41,11 +41,18 @@ export function getGithubRepositoryLast5Stargazers(
   repository: string
 ) {
   return fetch(
-    `${GITHUB_URL}${GITHUB_ENDPOINTS.REPOS}/${user}/${repository}${GITHUB_ENDPOINTS.STARGAZERS}?sort=created&direction=desc`,
+    `${GITHUB_URL}${GITHUB_ENDPOINTS.REPOS}/${user}/${repository}${GITHUB_ENDPOINTS.STARGAZERS}?sort=starred_at&direction=desc&per_page=5`,
     {
       headers: {
-        accept: "application/vnd.github.v3+json",
+        accept: "application/vnd.github.v3.star+json",
       },
     }
-  );
+  ).then(function handleResponse(response) {
+    if (!response.ok) {
+      const responseStatus = response.status ?? 0;
+      throw new Error(responseStatus.toString());
+    }
+
+    return response.json();
+  });
 }
