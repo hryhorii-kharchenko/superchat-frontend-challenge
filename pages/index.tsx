@@ -2,15 +2,15 @@ import { ChangeEvent } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { ColorResult, GithubPicker } from "react-color";
+import { RgbaStringColorPicker } from "react-colorful";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
 import { PresentationData } from "../src/types/presentation";
 import { PREVIEW_PAGE_ROUTE } from "../src/constants/pages";
-import styles from "../src/assets/styles/Home.module.scss";
 import { getGithubRepositoryData } from "../src/api/github";
+import styles from "../src/assets/styles/Home.module.scss";
 
 const validationSchema = yup.object({
   user: yup.string().required("User is required"),
@@ -31,8 +31,8 @@ function Home({
   let initialValues: PresentationData = {
     user: "",
     repository: "",
-    textColor: "#000",
-    backgroundColor: "#000",
+    textColor: "rgba(0, 0, 0, 0.87)",
+    backgroundColor: "rgba(255, 255, 255, 1)",
   };
 
   if (presentation) {
@@ -77,8 +77,8 @@ function Home({
   }
 
   function handleColorChangeCurried(field: string) {
-    return function handleColorChange(color: ColorResult) {
-      formik.setFieldValue(field, color.hex);
+    return function handleColorChange(color: string) {
+      formik.setFieldValue(field, color);
     };
   }
 
@@ -87,11 +87,11 @@ function Home({
       <Typography variant="h2" component="h1" align="center" gutterBottom>
         Welcome to Prettier GitHub Links!
       </Typography>
-      <Typography variant="body1" align="center" gutterBottom>
+      <Typography variant="body1" gutterBottom>
         Customize your repository presentation card using form below, preview it
         and then hit publish!
       </Typography>
-      <Typography variant="body1" align="center" gutterBottom>
+      <Typography variant="body1" gutterBottom>
         Now you have your own personalized way to present your repository on any
         social media!
       </Typography>
@@ -128,15 +128,47 @@ function Home({
           }
         />
 
-        <GithubPicker
-          color={formik.values.textColor}
-          onChangeComplete={handleColorChangeCurried("textColor")}
-        />
+        <div className={styles.colorPickerContainer}>
+          <Typography variant="body1" gutterBottom>
+            Select text color
+          </Typography>
 
-        <GithubPicker
-          color={formik.values.backgroundColor}
-          onChangeComplete={handleColorChangeCurried("backgroundColor")}
-        />
+          <div className={styles.colorPickerSelectionContainer}>
+            <RgbaStringColorPicker
+              color={formik.values.textColor}
+              onChange={handleColorChangeCurried("textColor")}
+            />
+
+            <div className={styles.colorPickerBackground}>
+              <p
+                style={{ color: formik.values.textColor }}
+                className={styles.colorPickerText}
+              >
+                Example text
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.colorPickerContainer}>
+          <Typography variant="body1" gutterBottom>
+            Select background color
+          </Typography>
+
+          <div className={styles.colorPickerSelectionContainer}>
+            <RgbaStringColorPicker
+              color={formik.values.backgroundColor}
+              onChange={handleColorChangeCurried("backgroundColor")}
+            />
+
+            <div
+              style={{ backgroundColor: formik.values.backgroundColor }}
+              className={styles.colorPickerBackground}
+            >
+              <p className={styles.colorPickerTextInvisible}>Example text</p>
+            </div>
+          </div>
+        </div>
 
         <Button color="primary" variant="contained" fullWidth type="submit">
           Preview

@@ -24,3 +24,29 @@
   line-height: 1.5;
   font-size: 1.5rem;
 }
+
+.colorPickerContainer {
+
+}
+
+.colorPickerSelectionContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.colorPickerBackground {
+  margin: 0 15px;
+  padding: 10px 25px;
+  border: 1px solid #000;
+  border-radius: 15px;
+}
+
+.colorPickerText {
+  font-size: 20px;
+}
+
+.colorPickerTextInvisible {
+  font-size: 20px;
+  opacity: 0;
+}
