@@ -1,4 +1,6 @@
 export interface PresentationData {
-  user?: string;
-  repository?: string;
+  user: string;
+  repository: string;
+  textColor: string;
+  backgroundColor: string;
 }

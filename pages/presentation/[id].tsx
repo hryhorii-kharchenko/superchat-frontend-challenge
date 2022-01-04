@@ -8,8 +8,20 @@ import { PresentationData } from "../../src/types/presentation";
 
 import styles from "../../src/assets/styles/PresentationPage.module.scss";
 
-function PresentationPage({ user, repository }: PresentationData) {
-  return <Presentation user={user} repository={repository} />;
+function PresentationPage({
+  user,
+  repository,
+  textColor,
+  backgroundColor,
+}: PresentationData) {
+  return (
+    <Presentation
+      user={user}
+      repository={repository}
+      textColor={textColor}
+      backgroundColor={backgroundColor}
+    />
+  );
 }
 
 export default PresentationPage;
@@ -23,14 +35,15 @@ export async function getServerSideProps(
 
   try {
     if (context.params && context.params.id) {
-      const { user, repository } = await getPresentation(
-        context.params.id.toString()
-      );
+      const { user, repository, textColor, backgroundColor } =
+        await getPresentation(context.params.id.toString());
 
       result = {
         props: {
           user,
           repository,
+          textColor,
+          backgroundColor,
         },
       };
     }

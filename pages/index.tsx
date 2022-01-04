@@ -1,8 +1,9 @@
-import React from "react";
-import { useRouter } from "next/router";
+import { ChangeEvent } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { ColorResult, GithubPicker } from "react-color";
+import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
@@ -14,6 +15,8 @@ import { getGithubRepositoryData } from "../src/api/github";
 const validationSchema = yup.object({
   user: yup.string().required("User is required"),
   repository: yup.string().required("Repository is required"),
+  textColor: yup.string().required("Text color is required"),
+  backgroundColor: yup.string().required("Background color is required"),
 });
 
 function Home({
@@ -25,28 +28,25 @@ function Home({
 }) {
   const router = useRouter();
 
-  const initialValues = {
+  let initialValues: PresentationData = {
     user: "",
     repository: "",
+    textColor: "#000",
+    backgroundColor: "#000",
   };
 
   if (presentation) {
-    const { user, repository } = presentation;
-
-    if (user) {
-      initialValues.user = user;
-    }
-
-    if (repository) {
-      initialValues.repository = repository;
-    }
+    initialValues = { ...presentation };
   }
 
   const formik = useFormik({
     initialStatus: "",
     initialValues,
     validationSchema,
-    onSubmit: async function handleSubmit(values, { setStatus }) {
+    onSubmit: async function handleSubmit(
+      values: PresentationData,
+      { setStatus }
+    ) {
       let isSuccessful = false;
 
       try {
@@ -71,9 +71,15 @@ function Home({
     },
   });
 
-  function handleChange(event: React.ChangeEvent<any>) {
+  function handleRepositoryInfoChange(event: ChangeEvent<any>) {
     formik.handleChange(event);
     formik.setStatus("");
+  }
+
+  function handleColorChangeCurried(field: string) {
+    return function handleColorChange(color: ColorResult) {
+      formik.setFieldValue(field, color.hex);
+    };
   }
 
   return (
@@ -97,7 +103,7 @@ function Home({
           name="user"
           label="User"
           value={formik.values.user}
-          onChange={handleChange}
+          onChange={handleRepositoryInfoChange}
           error={
             (formik.touched.repository && Boolean(formik.errors.repository)) ||
             Boolean(formik.status)
@@ -111,7 +117,7 @@ function Home({
           label="Repository"
           type="repository"
           value={formik.values.repository}
-          onChange={handleChange}
+          onChange={handleRepositoryInfoChange}
           error={
             (formik.touched.repository && Boolean(formik.errors.repository)) ||
             Boolean(formik.status)
@@ -120,6 +126,16 @@ function Home({
             (formik.touched.repository && formik.errors.repository) ||
             formik.status
           }
+        />
+
+        <GithubPicker
+          color={formik.values.textColor}
+          onChangeComplete={handleColorChangeCurried("textColor")}
+        />
+
+        <GithubPicker
+          color={formik.values.backgroundColor}
+          onChangeComplete={handleColorChangeCurried("backgroundColor")}
         />
 
         <Button color="primary" variant="contained" fullWidth type="submit">

@@ -10,7 +10,12 @@ import {
 } from "../../api/github";
 import styles from "./Presentation.module.scss";
 
-function Presentation({ user, repository }: PresentationData) {
+function Presentation({
+  user,
+  repository,
+  textColor,
+  backgroundColor,
+}: PresentationData) {
   const [repoData, setRepoData] = useState();
   const [contributorData, setContributorData] = useState();
   const [stargazerData, setStargazerData] = useState();
@@ -92,7 +97,12 @@ function Presentation({ user, repository }: PresentationData) {
   if (contributorData) {
     const contributorsListJsx = contributorData.map(function (contributor) {
       return (
-        <Typography variant="body1" align="center" gutterBottom>
+        <Typography
+          variant="body1"
+          align="center"
+          gutterBottom
+          key={contributor.id}
+        >
           {contributor.login}
         </Typography>
       );
@@ -119,7 +129,12 @@ function Presentation({ user, repository }: PresentationData) {
   if (stargazerData) {
     const stargazersListJsx = stargazerData.map(function (stargazer) {
       return (
-        <Typography variant="body1" align="center" gutterBottom>
+        <Typography
+          variant="body1"
+          align="center"
+          gutterBottom
+          key={stargazer.user.id}
+        >
           {stargazer.user.login}
         </Typography>
       );
@@ -153,6 +168,10 @@ function Presentation({ user, repository }: PresentationData) {
         {contributorsJsx}
         {stargazersJsx}
       </div>
+      <div
+        style={{ width: "100px", height: "100px", backgroundColor: textColor }}
+      />
+      <div style={{ width: "100px", height: "100px", backgroundColor }} />
     </div>
   );
 }

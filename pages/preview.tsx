@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 
 import { useEffect } from "react";
+import { text } from "stream/consumers";
 import Presentation from "../src/components/Presentation/Presentation";
 
 import { PresentationData } from "../src/types/presentation";
@@ -48,7 +49,7 @@ function Preview({
   let resultJsx = null;
 
   if (presentation) {
-    const { user, repository } = presentation;
+    const { user, repository, textColor, backgroundColor } = presentation;
 
     resultJsx = (
       <>
@@ -73,7 +74,12 @@ function Preview({
           </Button>
         </aside>
 
-        <Presentation user={user} repository={repository} />
+        <Presentation
+          user={user}
+          repository={repository}
+          textColor={textColor}
+          backgroundColor={backgroundColor}
+        />
       </>
     );
   }
