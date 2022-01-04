@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { RgbaStringColorPicker } from "react-colorful";
+import { Emoji, EmojiData, Picker } from "emoji-mart";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -12,11 +13,14 @@ import { PREVIEW_PAGE_ROUTE } from "../src/constants/pages";
 import { getGithubRepositoryData } from "../src/api/github";
 import styles from "../src/assets/styles/Home.module.scss";
 
+import "emoji-mart/css/emoji-mart.css";
+
 const validationSchema = yup.object({
   user: yup.string().required("User is required"),
   repository: yup.string().required("Repository is required"),
   textColor: yup.string().required("Text color is required"),
   backgroundColor: yup.string().required("Background color is required"),
+  emoji: yup.string(),
 });
 
 function Home({
@@ -33,6 +37,7 @@ function Home({
     repository: "",
     textColor: "rgba(0, 0, 0, 0.87)",
     backgroundColor: "rgba(255, 255, 255, 1)",
+    emoji: "",
   };
 
   if (presentation) {
@@ -80,6 +85,10 @@ function Home({
     return function handleColorChange(color: string) {
       formik.setFieldValue(field, color);
     };
+  }
+
+  function handleEmojiChange(emoji: EmojiData) {
+    formik.setFieldValue("emoji", emoji.id);
   }
 
   return (
@@ -169,6 +178,11 @@ function Home({
             </div>
           </div>
         </div>
+
+        <div className={styles.emojiContainer}>
+          <Emoji emoji={formik.values.emoji} native size={64} />
+        </div>
+        <Picker onSelect={handleEmojiChange} native title="Pick your emoji" />
 
         <Button color="primary" variant="contained" fullWidth type="submit">
           Preview

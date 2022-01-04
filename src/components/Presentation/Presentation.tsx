@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-
 import Button from "@mui/material/Button";
+import { Emoji } from "emoji-mart";
+
 import { PresentationData } from "../../types/presentation";
 import {
   getGithubRepositoryData,
@@ -15,6 +16,7 @@ function Presentation({
   repository,
   textColor,
   backgroundColor,
+  emoji,
 }: PresentationData) {
   const [repoData, setRepoData] = useState();
   const [contributorData, setContributorData] = useState();
@@ -49,29 +51,23 @@ function Presentation({
     [user, repository]
   );
 
+  let emojiJsx = null;
+  let descriptionJsx = null;
   let infoContainerJsx = null;
-  let repoInfoJsx = null;
   let contributorsJsx = null;
   let stargazersJsx = null;
 
-  let descriptionJsx = null;
+  if (emoji) {
+    emojiJsx = <Emoji emoji={emoji} native size={48} />;
+  }
 
   if (repoData && repoData.description) {
     descriptionJsx = (
-      <Typography variant="body1" gutterBottom>
+      <Typography variant="body1" gutterBottom sx={{ color: textColor }}>
         {repoData.description}
       </Typography>
     );
   }
-
-  repoInfoJsx = (
-    <div className={styles.repoInfoContainer}>
-      <Typography variant="h3" component="h1">
-        {user} / {repository}
-      </Typography>
-      {descriptionJsx}
-    </div>
-  );
 
   if (
     repoData &&
@@ -95,12 +91,15 @@ function Presentation({
   }
 
   if (contributorData) {
-    const contributorsListJsx = contributorData.map(function (contributor) {
+    const contributorsListJsx = contributorData.map(function getContributorJsx(
+      contributor
+    ) {
       return (
         <Typography
           variant="body1"
           align="center"
           gutterBottom
+          sx={{ color: textColor }}
           key={contributor.id}
         >
           {contributor.login}
@@ -111,14 +110,32 @@ function Presentation({
     if (contributorsListJsx.length > 0) {
       contributorsJsx = (
         <div className={styles.stargazersContainer}>
-          <Typography variant="h4" component="h2" align="center" gutterBottom>
+          <Typography
+            variant="h4"
+            component="h2"
+            align="center"
+            gutterBottom
+            sx={{ color: textColor }}
+          >
             Top 5 contributors
           </Typography>
           {contributorsListJsx}
-          <Typography variant="h5" component="h3" align="center" gutterBottom>
+          <Typography
+            variant="h5"
+            component="h3"
+            align="center"
+            gutterBottom
+            sx={{ color: textColor }}
+          >
             Join them!
           </Typography>
-          <Button color="primary" variant="contained" fullWidth type="button">
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            type="button"
+            sx={{ backgroundColor }}
+          >
             Fork
           </Button>
         </div>
@@ -127,12 +144,15 @@ function Presentation({
   }
 
   if (stargazerData) {
-    const stargazersListJsx = stargazerData.map(function (stargazer) {
+    const stargazersListJsx = stargazerData.map(function getStargazerJsx(
+      stargazer
+    ) {
       return (
         <Typography
           variant="body1"
           align="center"
           gutterBottom
+          sx={{ color: textColor }}
           key={stargazer.user.id}
         >
           {stargazer.user.login}
@@ -143,14 +163,32 @@ function Presentation({
     if (stargazersListJsx.length > 0) {
       stargazersJsx = (
         <div className={styles.stargazersContainer}>
-          <Typography variant="h4" component="h2" align="center" gutterBottom>
+          <Typography
+            variant="h4"
+            component="h2"
+            align="center"
+            gutterBottom
+            sx={{ color: textColor }}
+          >
             First 5 stargazers
           </Typography>
           {stargazersListJsx}
-          <Typography variant="h5" component="h3" align="center" gutterBottom>
+          <Typography
+            variant="h5"
+            component="h3"
+            align="center"
+            gutterBottom
+            sx={{ color: textColor }}
+          >
             Join them!
           </Typography>
-          <Button color="primary" variant="contained" fullWidth type="button">
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            type="button"
+            sx={{ backgroundColor }}
+          >
             Star
           </Button>
         </div>
@@ -159,20 +197,24 @@ function Presentation({
   }
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        {repoInfoJsx}
-        {infoContainerJsx}
-      </header>
-      <div className={styles.peopleContainer}>
-        {contributorsJsx}
-        {stargazersJsx}
+    <>
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <div className={styles.repoInfoContainer}>
+            <Typography variant="h3" component="h1" sx={{ color: textColor }}>
+              {emojiJsx} {user} / {repository}
+            </Typography>
+            {descriptionJsx}
+          </div>
+          {infoContainerJsx}
+        </header>
+        <div className={styles.peopleContainer}>
+          {contributorsJsx}
+          {stargazersJsx}
+        </div>
       </div>
-      <div
-        style={{ width: "100px", height: "100px", backgroundColor: textColor }}
-      />
-      <div style={{ width: "100px", height: "100px", backgroundColor }} />
-    </div>
+      <div style={{ backgroundColor }} className={styles.backdrop} />
+    </>
   );
 }
 

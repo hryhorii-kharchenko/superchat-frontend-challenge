@@ -13,6 +13,7 @@ function PresentationPage({
   repository,
   textColor,
   backgroundColor,
+  emoji,
 }: PresentationData) {
   return (
     <Presentation
@@ -20,6 +21,7 @@ function PresentationPage({
       repository={repository}
       textColor={textColor}
       backgroundColor={backgroundColor}
+      emoji={emoji}
     />
   );
 }
@@ -35,7 +37,7 @@ export async function getServerSideProps(
 
   try {
     if (context.params && context.params.id) {
-      const { user, repository, textColor, backgroundColor } =
+      const { user, repository, textColor, backgroundColor, emoji } =
         await getPresentation(context.params.id.toString());
 
       result = {
@@ -44,6 +46,7 @@ export async function getServerSideProps(
           repository,
           textColor,
           backgroundColor,
+          emoji,
         },
       };
     }

@@ -49,7 +49,8 @@ function Preview({
   let resultJsx = null;
 
   if (presentation) {
-    const { user, repository, textColor, backgroundColor } = presentation;
+    const { user, repository, textColor, backgroundColor, emoji } =
+      presentation;
 
     resultJsx = (
       <>
@@ -79,6 +80,7 @@ function Preview({
           repository={repository}
           textColor={textColor}
           backgroundColor={backgroundColor}
+          emoji={emoji}
         />
       </>
     );

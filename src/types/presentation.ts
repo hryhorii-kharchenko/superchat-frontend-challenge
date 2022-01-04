@@ -3,4 +3,5 @@ export interface PresentationData {
   repository: string;
   textColor: string;
   backgroundColor: string;
+  emoji: string;
 }
