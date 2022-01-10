@@ -134,7 +134,7 @@ function Presentation({
             variant="contained"
             fullWidth
             type="button"
-            sx={{ backgroundColor }}
+            sx={{ backgroundColor: textColor }}
           >
             Fork
           </Button>
@@ -187,7 +187,7 @@ function Presentation({
             variant="contained"
             fullWidth
             type="button"
-            sx={{ backgroundColor }}
+            sx={{ backgroundColor: textColor }}
           >
             Star
           </Button>
